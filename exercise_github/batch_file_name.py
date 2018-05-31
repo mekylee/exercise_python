@@ -1,33 +1,52 @@
 #! /usr/bin/python3
-# codig:utf-8
-
-"""
-ÅúÁ¿ĞŞ¸ÄÎÄ¼şÃûË¼Â·:
-1. ÄÃµ½µÚÒ»ĞĞĞĞ²Î´«½øÀ´µÄÎÄ¼şÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼şÃû
-2. Ê¹ÓÃos.path.split(filename)½«Ãû×Ö²ğ³ÉÎÄ¼şÃûºÍÀ©Õ¹Ãû´æÓÚsplit_fileÔª×æ»ã×Ü
-split_file[0]ÎªÎÄ¼şÃû£¬split_file[1]ÎªÀ©Õ¹Ãû
-3. Ñ­»·±È½ÏÎÄ¼şµÄÀ©Õ¹ÃûÊÇ·ñĞèÒª±»Ìæ»»
-4. Èç¹ûÊÇ£¬ÔòÎÄ¼şÃûºÍÀ©Õ¹ÃûÆ´½ÓÔÚÒ»Æğ×é³ÉĞÂÎÄ¼şÃûÃû
-5. Ö´ĞĞos.rename()°Ñwork_dir\filename,Ìæ»»³Éwork\newfile
-"""
+# coding:utf-8
+'''
+æ‰¹é‡ä¿®æ”¹æ–‡ä»¶åæ€è·¯:
+1. æ‹¿åˆ°ç¬¬ä¸€è¡Œè¡Œå‚ä¼ è¿›æ¥çš„æ–‡ä»¶ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶å
+2. ä½¿ç”¨os.path.split(filename)å°†åå­—æ‹†æˆæ–‡ä»¶åå’Œæ‰©å±•åå­˜äºsplit_fileå…ƒç¥–æ±‡æ€»
+split_file[0]ä¸ºæ–‡ä»¶åï¼Œsplit_file[1]ä¸ºæ‰©å±•å
+3. å¾ªç¯æ¯”è¾ƒæ–‡ä»¶çš„æ‰©å±•åæ˜¯å¦éœ€è¦è¢«æ›¿æ¢
+4. å¦‚æœæ˜¯ï¼Œåˆ™æ–‡ä»¶åå’Œæ‰©å±•åæ‹¼æ¥åœ¨ä¸€èµ·ç»„æˆæ–°æ–‡ä»¶åå
+5. æ‰§è¡Œos.rename()æŠŠwork_dir\filename,æ›¿æ¢æˆwork\newfile
+'''
 import os
 import argparse
 
 def batch_rename(work_dir,old_ext,new_ext):
-    #ÄÃµ½ÎÄ¼şÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼şÃû
+    #æ‹¿åˆ°æ–‡ä»¶ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶å
     for filename in os.listdir(work_dir):
-        #»ñÈ¡ÎÄ¼şÀ©Õ¹Ãû
+        #è·å–æ–‡ä»¶æ‰©å±•å
         split_file = os.path.splitext(filename)
         file_ext = split_file[1]
-        #ÅĞ¶ÏÎÄ¼şµÄÀ©Õ¹ÃûÊÇ·ñ¸Ä±ä
+        #åˆ¤æ–­æ–‡ä»¶çš„æ‰©å±•åæ˜¯å¦æ”¹å˜
         if old_ext == new_ext:
             new_file=split_file[0]+new_ext
-            # Ğ´ÎÄ¼ş
+            # å†™æ–‡ä»¶40
             os.rename(os.path.join(work_dir,filename),os.path.join(work_dir,new_file))
 
 def get_parser():
-    # Éú³ÉÒ»¸ö½âÎö´¦ÀíÆ÷£¬´øÓĞÃèÊö
+    # ç”Ÿæˆä¸€ä¸ªè§£æå¤„ç†å™¨ï¼Œå¸¦æœ‰æè¿°
     parser = argparse.ArgumentParser(description="change extentsion of files in a working directory ")
     parser.add_argument("work_dir", metavar="WORK_DIR",type=str, nargs=1,help="the directory where to change extension")
     parser.add_argument("old_ext",metavar="OLD_EXT",type=str,nargs=1,help="old extension")
     parser.add_argument("new_ext",metavar="NEW_EXT",type=str,nargs=1,help="new extension")
+    return parser
+
+def main():
+    parser=get_parser()
+    args=vars(parser.parse_args())
+    work_dir=args["work_dir"][0]
+
+    old_ext=args["old_ext"][0]
+    if old_ext[0] != '.':
+        old_ext = '.'+ old_ext
+
+    new_ext=args['new_ext'][0]
+    if new_ext != '.':
+        new_ext = '. '+ new_ext
+
+    batch_rename(work_dir,old_ext,new_ext)
+
+
+if __name__ == '__main__':
+    main()
